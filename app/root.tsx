@@ -195,9 +195,9 @@ function App() {
 						<SidebarTrigger />
 						<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 					</header>
-					<main className="flex justify-between pb-5">
+					<div className="flex justify-between pb-5">
 						<Outlet />
-					</main>
+					</div>
 				</div>
 			</SidebarProvider>
 			<EpicToaster closeButton position="top-center" theme={theme} />

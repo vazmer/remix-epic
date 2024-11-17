@@ -110,13 +110,13 @@ function UserDropdown() {
 				side="top"
 				className="w-[--radix-popper-anchor-width]"
 			>
-				<DropdownMenuItem>
-					<Link prefetch="intent" to={`/users/${user.username}`} autoFocus>
+				<Link prefetch="intent" to={`/users/${user.username}`} autoFocus>
+					<DropdownMenuItem>
 						<Icon className="text-body-md" name="avatar">
 							Profile
 						</Icon>
-					</Link>
-				</DropdownMenuItem>
+					</DropdownMenuItem>
+				</Link>
 				<DropdownMenuItem
 					// this prevents the menu from closing before the form submission is completed
 					onSelect={(event) => {
