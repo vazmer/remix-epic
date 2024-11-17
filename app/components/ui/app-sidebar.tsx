@@ -1,11 +1,5 @@
 import { DropdownMenuContent } from '@radix-ui/react-dropdown-menu'
-import {
-	Form,
-	Link,
-	useLocation,
-	useMatches,
-	useSubmit,
-} from '@remix-run/react'
+import { Form, Link, useMatches, useSubmit } from '@remix-run/react'
 import { ChevronUp } from 'lucide-react'
 import { useRef } from 'react'
 import { Button } from '#app/components/ui/button.tsx'

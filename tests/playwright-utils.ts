@@ -41,7 +41,7 @@ async function getOrInsertUser({
 }: GetOrInsertUserOptions = {}): Promise<User> {
 	const select = { id: true, email: true, username: true, name: true }
 	if (id) {
-		return await prisma.user.findUniqueOrThrow({
+		return prisma.user.findUniqueOrThrow({
 			select,
 			where: { id: id },
 		})
@@ -50,7 +50,7 @@ async function getOrInsertUser({
 		username ??= userData.username
 		password ??= userData.username
 		email ??= userData.email
-		return await prisma.user.create({
+		return prisma.user.create({
 			select,
 			data: {
 				...userData,
@@ -68,18 +68,18 @@ export const test = base.extend<{
 	login(options?: GetOrInsertUserOptions): Promise<User>
 	prepareGitHubUser(): Promise<GitHubUser>
 }>({
-	insertNewUser: async ({}, use) => {
+	insertNewUser: async ({}, promise) => {
 		let userId: string | undefined = undefined
-		await use(async (options) => {
+		await promise(async (options) => {
 			const user = await getOrInsertUser(options)
 			userId = user.id
 			return user
 		})
 		await prisma.user.delete({ where: { id: userId } }).catch(() => {})
 	},
-	login: async ({ page }, use) => {
+	login: async ({ page }, promise) => {
 		let userId: string | undefined = undefined
-		await use(async (options) => {
+		await promise(async (options) => {
 			const user = await getOrInsertUser(options)
 			userId = user.id
 			const session = await prisma.session.create({
@@ -106,7 +106,7 @@ export const test = base.extend<{
 		})
 		await prisma.user.deleteMany({ where: { id: userId } })
 	},
-	prepareGitHubUser: async ({ page }, use, testInfo) => {
+	prepareGitHubUser: async ({ page }, promise, testInfo) => {
 		await page.route(/\/auth\/github(?!\/callback)/, async (route, request) => {
 			const headers = {
 				...request.headers(),
@@ -116,7 +116,7 @@ export const test = base.extend<{
 		})
 
 		let ghUser: GitHubUser | null = null
-		await use(async () => {
+		await promise(async () => {
 			const newGitHubUser = await insertGitHubUser(testInfo.testId)!
 			ghUser = newGitHubUser
 			return newGitHubUser
