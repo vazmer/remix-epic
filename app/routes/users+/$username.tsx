@@ -29,11 +29,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileRoute() {
-	const data = useLoaderData<typeof loader>()
-	const user = data.user
+	const { user, userJoinedDisplay,  } = useLoaderData<typeof loader>()
 	const userDisplayName = user.name ?? user.username
 	const loggedInUser = useOptionalUser()
-	const isLoggedInUser = data.user.id === loggedInUser?.id
+	const isLoggedInUser = user.id === loggedInUser?.id
 
 	return (
 		<div className="container mb-48 mt-36 flex flex-col items-center justify-center">
@@ -44,7 +43,7 @@ export default function ProfileRoute() {
 					<div className="absolute -top-40">
 						<div className="relative">
 							<img
-								src={getUserImgSrc(data.user.image?.id)}
+								src={getUserImgSrc(user.image?.id)}
 								alt={userDisplayName}
 								className="h-52 w-52 rounded-full object-cover"
 							/>
@@ -59,7 +58,7 @@ export default function ProfileRoute() {
 						<h1 className="text-center text-h2">{userDisplayName}</h1>
 					</div>
 					<p className="mt-2 text-center text-muted-foreground">
-						Joined {data.userJoinedDisplay}
+						Joined {userJoinedDisplay}
 					</p>
 					{isLoggedInUser ? (
 						<Form action="/logout" method="POST" className="mt-3">
