@@ -162,5 +162,6 @@ interface CustomMatchers<R = unknown> {
 
 declare module 'vitest' {
 	interface Assertion<T = any> extends CustomMatchers<T> {}
-	interface AsymmetricMatchersContaining extends CustomMatchers {}
+	// error TS2310: Type 'AsymmetricMatchersContaining' recursively references itself as a base type.
+	// interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
