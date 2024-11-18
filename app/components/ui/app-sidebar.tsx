@@ -23,13 +23,18 @@ import {
 } from '#app/components/ui/sidebar'
 import { getUserImgSrc } from '#app/utils/misc.tsx'
 import { useOptionalUser, useUser } from '#app/utils/user.ts'
+import type { BreadcrumbHandle } from '#app/routes/settings+/profile.tsx'
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+	breadcrumb: <Icon name="dots-horizontal">Users</Icon>,
+	getSitemapEntries: () => null,
+}
 
 export function AppSidebar() {
 	const user = useOptionalUser()
 	const matches = useMatches()
-	const isNotesPage = matches.find(
-		(m) => m.id === 'routes/users+/$username_+/notes',
-	)
+	const isUsersPage = !!matches.find((m) => m.id === 'routes/admin+/users')
 
 	return (
 		<Sidebar>
@@ -45,13 +50,10 @@ export function AppSidebar() {
 						<SidebarMenu>
 							{user && (
 								<SidebarMenuItem>
-									<SidebarMenuButton isActive={!!isNotesPage} asChild>
-										<Link
-											prefetch="intent"
-											to={`/users/${user.username}/notes`}
-										>
-											<Icon className="text-body-md" name="pencil-2">
-												Notes
+									<SidebarMenuButton isActive={isUsersPage} asChild>
+										<Link prefetch="intent" to={`/admin/users`}>
+											<Icon className="text-body-md" name="avatar">
+												Users
 											</Icon>
 										</Link>
 									</SidebarMenuButton>

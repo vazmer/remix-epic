@@ -58,3 +58,7 @@ export async function requireUserWithRole(request: Request, name: string) {
 	}
 	return user.id
 }
+
+export async function requireAdmin(request: Request) {
+	return requireUserWithRole(request, 'admin')
+}

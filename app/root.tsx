@@ -30,7 +30,11 @@ import {
 	DropdownMenuPortal,
 	DropdownMenuTrigger,
 } from '#app/components/ui/dropdown-menu.tsx'
-import { SidebarProvider, SidebarTrigger } from '#app/components/ui/sidebar.tsx'
+import {
+	SidebarProvider,
+	SidebarTrigger,
+	useSidebar,
+} from '#app/components/ui/sidebar.tsx'
 import { useOptionalUser, useUser } from '#app/utils/user.ts'
 import appleTouchIconAssetUrl from './assets/favicons/apple-touch-icon.png'
 import faviconAssetUrl from './assets/favicons/favicon.svg'
@@ -51,6 +55,11 @@ import { useNonce } from './utils/nonce-provider.ts'
 import { getTheme, type Theme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '#app/components/ui/tooltip.tsx'
 
 export const links: LinksFunction = () => {
 	return [
@@ -205,7 +214,13 @@ function App() {
 			allowIndexing={allowIndexing}
 			env={data.ENV}
 		>
-			{isAdmin ? <AdminApp /> : <PublicApp />}
+			{isAdmin ? (
+				<SidebarProvider>
+					<AdminApp />
+				</SidebarProvider>
+			) : (
+				<PublicApp />
+			)}
 			<EpicToaster closeButton position="top-center" theme={theme} />
 			<EpicProgress />
 		</Document>
@@ -214,19 +229,27 @@ function App() {
 
 function AdminApp() {
 	const data = useLoaderData<typeof loader>()
+	const sidebar = useSidebar()
 	return (
-		<SidebarProvider>
+		<>
 			<AppSidebar />
 			<div className="flex h-screen flex-1 flex-col">
 				<header className="mb-4 flex items-center justify-between p-4">
-					<SidebarTrigger />
+					<Tooltip>
+						<TooltipTrigger>
+							<SidebarTrigger />
+						</TooltipTrigger>
+						<TooltipContent>
+							{sidebar.open ? 'Collapse menu' : 'Expand menu'}
+						</TooltipContent>
+					</Tooltip>
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</header>
-				<div className="flex h-full justify-between pb-5">
+				<div className="container flex h-full w-full pb-5">
 					<Outlet />
 				</div>
 			</div>
-		</SidebarProvider>
+		</>
 	)
 }
 
