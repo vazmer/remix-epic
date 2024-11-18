@@ -43,7 +43,7 @@ export function AppSidebar() {
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{!user ? null : (
+							{user && (
 								<SidebarMenuItem>
 									<SidebarMenuButton isActive={!!isNotesPage} asChild>
 										<Link
